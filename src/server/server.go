@@ -6,10 +6,11 @@ import (
 	"log"
 	"net"
 	"time"
-	
+
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	
+
+	"market-scoring/src/config"  // Импортируем конфигурации
 	pb "market-scoring/src/proto"
 )
 
@@ -39,13 +40,23 @@ func (s *server) ProcessData(ctx context.Context, req *pb.DataRequest) (*pb.Data
 }
 
 func StartGRPCServer() {
-	lis, err := net.Listen("tcp", ":50051")
+	// Инициализация конфигураций из файла
+	err := config.InitConfigFromJSONFile("src/config/config.json")
+	if err != nil {
+		log.Fatalf("Error initializing config: %v", err)
+	}
+
+	// Получение URL для gRPC сервера из конфигурации
+	grpcServerAddress := config.Config.Urls.Grpc
+
+	// Запуск gRPC сервера на адресе, полученном из конфигурации
+	lis, err := net.Listen("tcp", grpcServerAddress)
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}
 	grpcServer := grpc.NewServer()
 	pb.RegisterDataServiceServer(grpcServer, &server{})
-	fmt.Println("gRPC server is running on port 50051")
+	fmt.Printf("gRPC server is running on %s\n", grpcServerAddress)
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}

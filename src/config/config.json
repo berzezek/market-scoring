@@ -1,0 +1,11 @@
+{
+    "env": {
+      "mode": "development"
+    },
+    "urls": {
+      "dev": "localhost:8080",
+      "prod": "localhost:80",
+      "grpc": "localhost:50051"
+    }
+  }
+  
