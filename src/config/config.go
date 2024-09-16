@@ -9,6 +9,7 @@ import (
 type Configs struct {
 	Env  Env  `json:"env"`
 	Urls Urls `json:"urls"`
+	ScoringConditions ScoringConditions `json:"scoringConditions"`
 }
 
 type Env struct {
@@ -19,6 +20,13 @@ type Urls struct {
 	Dev  string `json:"dev"`
 	Prod string `json:"prod"`
 	Grpc string `json:"grpc"`
+}
+
+type ScoringConditions struct {
+	ActiveProduct int32 `json:"activeProduct"`
+	RegistrationDate int32 `json:"registrationDate"`
+	Turnover float64 `json:"turnover"`
+	SalesLastMonth int32 `json:"salesLastMonth"`
 }
 
 var Config *Configs

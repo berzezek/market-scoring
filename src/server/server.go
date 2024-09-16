@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"market-scoring/src/config"  // Импортируем конфигурации
+	"market-scoring/src/config"
 	pb "market-scoring/src/proto"
 )
 
@@ -20,21 +20,24 @@ type server struct {
 
 func (s *server) ProcessData(ctx context.Context, req *pb.DataRequest) (*pb.DataResponse, error) {
 	// Примерные данные, которые сервер возвращает
-	activeProducts := 150
-	registrationDate := timestamppb.New(time.Date(2020, time.January, 1, 0, 0, 0, 0, time.UTC))
-	turnover := float32(123456.78)
-	salesLastMonth := 320
+	activeProducts := 11
+	registrationDate := time.Date(2024, time.March, 15, 0, 0, 0, 0, time.UTC)
+	turnover := float64(6_000_000)
+	salesLastMonth := 5
 
 	// Логируем запрос
 	fmt.Printf("Received IIN: %s, BIN: %s\n", req.Iin, req.Bin)
+
+	// Преобразуем time.Time в protobuf Timestamp
+	registrationTimestamp := timestamppb.New(registrationDate)
 
 	// Возвращаем ответ с данными
 	return &pb.DataResponse{
 		Message:          "Data processed",
 		Success:          true,
 		ActiveProducts:   int32(activeProducts),
-		RegistrationDate: registrationDate,
-		Turnover_6Months:  turnover,
+		RegistrationDate: registrationTimestamp, // Используем timestamppb.Timestamp
+		Turnover:         turnover,
 		SalesLastMonth:   int32(salesLastMonth),
 	}, nil
 }

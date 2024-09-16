@@ -2,14 +2,16 @@ package client
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
+	"strconv"  // Для преобразования bool в строку
 	"time"
 
 	"google.golang.org/grpc"
 
 	"market-scoring/src/config"
+	"market-scoring/src/service"
+
 	pb "market-scoring/src/proto"
 )
 
@@ -38,7 +40,7 @@ func StartHTTPServer() {
 		}
 
 		// Устанавливаем соединение с gRPC-сервером
-		conn, err := grpc.Dial(grpcServerURL, grpc.WithInsecure())
+		conn, err := grpc.Dial(grpcServerURL, grpc.WithInsecure()) // Для тестов, используйте безопасное соединение в продуктиве
 		if err != nil {
 			http.Error(w, "Failed to connect to gRPC server", http.StatusInternalServerError)
 			log.Println("Failed to connect to gRPC server:", err)
@@ -59,15 +61,14 @@ func StartHTTPServer() {
 			return
 		}
 
-		// Форматируем вывод
-		response := fmt.Sprintf(
-			"Success: %s\nActive Products: %d\nRegistration Date: %s\nTurnover for 6 Months: %.2f\nSales Last Month: %d",
-			res.Message,
-			res.ActiveProducts,
-			res.RegistrationDate.AsTime().Format(time.RFC3339),
-			res.Turnover_6Months,
-			res.SalesLastMonth,
-		)
+		// Преобразуем res.RegistrationDate из *timestamppb.Timestamp в time.Time
+		registrationDate := res.RegistrationDate.AsTime()
+
+		// Обработка ответа с помощью ScoringService
+		scoringResult := service.ScoringService(res.ActiveProducts, registrationDate, res.Turnover, res.SalesLastMonth)
+
+		// Преобразуем результат bool в строку
+		response := strconv.FormatBool(scoringResult)
 
 		// Ответ клиенту
 		log.Println("Sending response to client")

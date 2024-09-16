@@ -1,11 +1,16 @@
 {
-    "env": {
-      "mode": "development"
-    },
-    "urls": {
-      "dev": "localhost:8080",
-      "prod": "localhost:80",
-      "grpc": "localhost:50051"
-    }
+  "env": {
+    "mode": "dev"
+  },
+  "urls": {
+    "dev": "localhost:8080",
+    "prod": "localhost:80",
+    "grpc": "localhost:50051"
+  },
+  "scoringConditions": {
+    "activeProduct": 10,
+    "registrationDate": 6,
+    "turnover": 6000000,
+    "salesLastMonth": 5
   }
-  
+}

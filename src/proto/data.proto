@@ -7,19 +7,19 @@ option go_package = "/src/proto";
 import "google/protobuf/timestamp.proto";
 
 service DataService {
-  rpc ProcessData (DataRequest) returns (DataResponse);
+    rpc ProcessData (DataRequest) returns (DataResponse);
 }
 
 message DataRequest {
-  string iin = 1;
-  string bin = 2;
+    string iin = 1;
+    string bin = 2;
 }
 
 message DataResponse {
-  string message = 1;
-  bool success = 2;
-  int32 active_products = 3;
-  google.protobuf.Timestamp registration_date = 4;
-  float turnover_6_months = 5;
-  int32 sales_last_month = 6;
+    string message = 1;
+    bool success = 2;
+    int32 active_products = 3;
+    google.protobuf.Timestamp registration_date = 4;
+    double turnover = 5;
+    int32 sales_last_month = 6;
 }
