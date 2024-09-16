@@ -26,7 +26,7 @@ func (s *server) ProcessData(ctx context.Context, req *pb.DataRequest) (*pb.Data
 	salesLastMonth := 5
 
 	// Логируем запрос
-	fmt.Printf("Received Seller ID: %s", req.SellerId)
+	fmt.Printf("Received Seller ID: %s\n", req.SellerId)
 
 	// Преобразуем time.Time в protobuf Timestamp
 	registrationTimestamp := timestamppb.New(registrationDate)
@@ -43,13 +43,7 @@ func (s *server) ProcessData(ctx context.Context, req *pb.DataRequest) (*pb.Data
 }
 
 func StartGRPCServer() {
-	// Инициализация конфигураций из файла
-	err := config.InitConfigFromJSONFile("src/config/config.json")
-	if err != nil {
-		log.Fatalf("Error initializing config: %v", err)
-	}
-
-	// Получение URL для gRPC сервера из конфигурации
+	// Получение URL для gRPC сервера из конфигурации, которая уже загружена в main.go
 	grpcServerAddress := config.Config.Urls.Grpc
 
 	// Запуск gRPC сервера на адресе, полученном из конфигурации
