@@ -20,13 +20,13 @@ type server struct {
 
 func (s *server) ProcessData(ctx context.Context, req *pb.DataRequest) (*pb.DataResponse, error) {
 	// Примерные данные, которые сервер возвращает
-	activeProducts := 11
+	activeProducts := 10
 	registrationDate := time.Date(2024, time.March, 15, 0, 0, 0, 0, time.UTC)
 	turnover := float64(6_000_000)
 	salesLastMonth := 5
 
 	// Логируем запрос
-	fmt.Printf("Received IIN: %s, BIN: %s\n", req.Iin, req.Bin)
+	fmt.Printf("Received Seller ID: %s", req.SellerId)
 
 	// Преобразуем time.Time в protobuf Timestamp
 	registrationTimestamp := timestamppb.New(registrationDate)

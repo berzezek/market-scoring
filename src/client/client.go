@@ -28,8 +28,7 @@ func StartHTTPServer() {
 	}
 
 	http.HandleFunc("/data", func(w http.ResponseWriter, r *http.Request) {
-		iin := r.URL.Query().Get("iin")
-		bin := r.URL.Query().Get("bin")
+		sellerId := r.URL.Query().Get("sellerId")
 
 		// Получаем адрес gRPC сервера из конфигурации
 		grpcServerURL := config.Config.Urls.Grpc
@@ -54,7 +53,7 @@ func StartHTTPServer() {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
 
-		res, err := client.ProcessData(ctx, &pb.DataRequest{Iin: iin, Bin: bin})
+		res, err := client.ProcessData(ctx, &pb.DataRequest{SellerId: sellerId})
 		if err != nil {
 			http.Error(w, "Failed to process data", http.StatusInternalServerError)
 			log.Println("Failed to process data:", err)

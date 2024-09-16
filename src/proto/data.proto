@@ -11,8 +11,7 @@ service DataService {
 }
 
 message DataRequest {
-    string iin = 1;
-    string bin = 2;
+    string sellerId = 1;
 }
 
 message DataResponse {

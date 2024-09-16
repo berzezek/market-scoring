@@ -34,6 +34,6 @@ protoc --go_out=. --go-grpc_out=. src/proto/data.proto
 
 ### Request
 ```sh
-curl "http://localhost:8080/data?iin=123&bin=456"
+curl "http://localhost:8080/data?sellerId"
 ```
 
