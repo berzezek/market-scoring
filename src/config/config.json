@@ -5,7 +5,8 @@
   "urls": {
     "dev": "localhost:8080",
     "prod": "localhost:80",
-    "grpc": "localhost:50051"
+    "grpc": "localhost:50051",
+    "grpc_prod": "localhost:50052"
   },
   "scoringConditions": {
     "activeProduct": 10,

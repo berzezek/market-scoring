@@ -17,11 +17,18 @@ func main() {
 	}
 
 	// Получение mode из конфигурации
-	Mode := config.Config.Env.Mode
-	
-	if (Mode=="dev") {
-		fmt.Println("Mode is development, Start server...")
-		go server.StartGRPCServer()
+	mode := config.Config.Env.Mode
+	var grpcServerURL string
+
+	if mode == "dev" {
+		fmt.Println("Mode is development, starting gRPC server...")
+		go server.StartGRPCServer() // Запуск gRPC сервера в фоновом режиме
+		grpcServerURL = config.Config.Urls.Grpc // Используем URL для разработки
+	} else {
+		fmt.Println("Mode is production, starting HTTP server...")
+		grpcServerURL = config.Config.Urls.GrpcProd // Используем URL для продакшена
 	}
-	client.StartHTTPServer()
+
+	// Запуск HTTP сервера с gRPC URL и передачей сервиса
+	client.StartHTTPServer(grpcServerURL)
 }

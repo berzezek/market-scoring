@@ -1,24 +1,37 @@
 # Market scoring service
 
+### Market Scoring Service — это сервис для оценки продавцов на маркетплейсе _"Forte market"_ на основе их данных. По запросу сервис получает определенную информацию об участнике через gRPC, вычисляет результаты с помощью бизнес-логики и возвращает `true` или `false` в зависимости от соблюдения определенных условий.
+
+
 ## Instalation
 
-
-### Protobuf
 ```sh
-go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+make install
+make export_path
+make proto
+```
 
-export PATH=$PATH:$(go env GOPATH)/bin
+or 
 
-protoc --go_out=. --go-grpc_out=. src/proto/data.proto
+```sh
+make all
+```
+
+## Run app
+
+```sh
+make run
 ```
 
 ### Scoring options
 
 #### Для установки условий скорнинга см. config/config.json -> scoringConditions где
 * activeProduct - Минимальное кол-во активных товаров
+
 * RegistrationDate - Минимальное кол-во месяцев прошедших с начала регистрации
+
 * Turnover - Минимальный оборот за 6 месяцев
+
 * SalesLastMonth - Кол-во продаж за последний месяц
 
 
@@ -34,6 +47,23 @@ protoc --go_out=. --go-grpc_out=. src/proto/data.proto
 
 ### Request
 ```sh
-curl "http://localhost:8080/data?sellerId"
+curl "http://localhost:8080/api/v1/data?sellerId=123"
+```
+__sellerId__ — _это уникальный идентификатор продавца на маркетплейсе, для которого нужно получить данные и провести оценку._
+
+### Response
+
+```sh
+{"message": false}  # or {"message": true}
 ```
 
+## Структура проекта
+* src/service: Основная бизнес-логика приложения.
+
+* src/transport: HTTP слой для обработки запросов.
+
+* src/proto: Протофайлы для работы с gRPC.
+
+* src/utils: Утилиты для работы с данными.
+
+* src/config: Конфигурация приложения (например, пути к gRPC серверам и условия скоринга).

@@ -20,6 +20,8 @@ type Urls struct {
 	Dev  string `json:"dev"`
 	Prod string `json:"prod"`
 	Grpc string `json:"grpc"`
+	GrpcProd string `json:"grpc_prod"`
+
 }
 
 type ScoringConditions struct {
