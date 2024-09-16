@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -31,11 +30,11 @@ func ScoringService(activeProducts int32, registrationDate time.Time, turnover f
 	// Получение условий для скоринга для gRPC сервера из конфигурации
 	scoringConditions := config.Config.ScoringConditions
 
-	fmt.Println(activeProducts >= scoringConditions.ActiveProduct)
-	fmt.Println(IsDateOlderThanMonths(registrationDate, 6))
-	fmt.Println(turnover >= scoringConditions.Turnover)	
-	fmt.Println(salesLastMonth >= scoringConditions.SalesLastMonth)
+	isActiveProductValid := activeProducts >= scoringConditions.ActiveProduct
+	isRegistrationDateValid := IsDateOlderThanMonths(registrationDate, 6)
+	isTurnoverValid := turnover >= scoringConditions.Turnover
+	isSalesLastMonthValid := salesLastMonth >= scoringConditions.SalesLastMonth
 
+	return isActiveProductValid && isRegistrationDateValid && isTurnoverValid && isSalesLastMonthValid
 
-	return activeProducts >= scoringConditions.ActiveProduct && IsDateOlderThanMonths(registrationDate, 6) && turnover >= scoringConditions.Turnover && salesLastMonth >= scoringConditions.SalesLastMonth
 }

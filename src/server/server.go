@@ -36,7 +36,7 @@ func (s *server) ProcessData(ctx context.Context, req *pb.DataRequest) (*pb.Data
 		Message:          "Data processed",
 		Success:          true,
 		ActiveProducts:   int32(activeProducts),
-		RegistrationDate: registrationTimestamp, // Используем timestamppb.Timestamp
+		RegistrationDate: registrationTimestamp,
 		Turnover:         turnover,
 		SalesLastMonth:   int32(salesLastMonth),
 	}, nil

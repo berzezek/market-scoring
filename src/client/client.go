@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
-	"strconv"  // Для преобразования bool в строку
+	"strconv"
 	"time"
 
 	"google.golang.org/grpc"
@@ -39,7 +39,7 @@ func StartHTTPServer() {
 		}
 
 		// Устанавливаем соединение с gRPC-сервером
-		conn, err := grpc.Dial(grpcServerURL, grpc.WithInsecure()) // Для тестов, используйте безопасное соединение в продуктиве
+		conn, err := grpc.Dial(grpcServerURL, grpc.WithInsecure())
 		if err != nil {
 			http.Error(w, "Failed to connect to gRPC server", http.StatusInternalServerError)
 			log.Println("Failed to connect to gRPC server:", err)
