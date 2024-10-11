@@ -9,9 +9,50 @@
     "grpc_prod": "localhost:50052"
   },
   "scoringConditions": {
-    "activeProduct": 10,
-    "registrationDate": 6,
-    "turnover": 6000000,
-    "salesLastMonth": 5
+    "xs": {
+      "activeProductsAge": 1
+    },
+    "s": {
+      "activeProductsAge": 90,
+      "orderCancellationBeforeConfirmation": 10,
+      "orderCancellationDuringDelivery": 10,
+      "orderConfirmationTimeViolation": 10,
+      "orderAssemblyTimeViolation": 15,
+      "deliveryTimeViolation": 15,
+      "sellerRating": 4.0
+    },
+    "m": {
+      "activeProductsAge": 180,
+      "orderCancellationBeforeConfirmation": 5,
+      "orderCancellationDuringDelivery": 5,
+      "orderConfirmationTimeViolation": 5,
+      "orderAssemblyTimeViolation": 10,
+      "deliveryTimeViolation": 10,
+      "sellerRating": 4.0
+    },
+    "l": {
+      "activeProductsAge": 180,
+      "orderCancellationBeforeConfirmation": 5,
+      "orderCancellationDuringDelivery": 5,
+      "orderConfirmationTimeViolation": 5,
+      "orderAssemblyTimeViolation": 10,
+      "deliveryTimeViolation": 10,
+      "sellerRating": 4.0,
+      "turnover": 1000000,
+      "isCreditBuyButton": true,
+      "isQRCreditOffline": true
+    },
+    "xl": {
+      "activeProductsAge": 180,
+      "orderCancellationBeforeConfirmation": 5,
+      "orderCancellationDuringDelivery": 5,
+      "orderConfirmationTimeViolation": 5,
+      "orderAssemblyTimeViolation": 10,
+      "deliveryTimeViolation": 10,
+      "sellerRating": 4.0,
+      "turnover": 5000000,
+      "isCreditBuyButton": true,
+      "isQRCreditOffline": true
+    }
   }
 }

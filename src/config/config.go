@@ -6,10 +6,20 @@ import (
 	"os"
 )
 
+// Configs структура для хранения всех конфигурационных данных
 type Configs struct {
-	Env  Env  `json:"env"`
-	Urls Urls `json:"urls"`
+	Env       Env       `json:"env"`
+	Urls      Urls      `json:"urls"`
 	ScoringConditions ScoringConditions `json:"scoringConditions"`
+}
+
+// ScoringConditions структура для хранения критериев для всех пакетов
+type ScoringConditions struct {
+	XS PackageXS `json:"xs"`
+	S  PackageS  `json:"s"`
+	M  PackageM  `json:"m"`
+	L  PackageL  `json:"l"`
+	XL PackageXL `json:"xl"`
 }
 
 type Env struct {
@@ -17,22 +27,44 @@ type Env struct {
 }
 
 type Urls struct {
-	Dev  string `json:"dev"`
-	Prod string `json:"prod"`
-	Grpc string `json:"grpc"`
+	Dev      string `json:"dev"`
+	Prod     string `json:"prod"`
+	Grpc     string `json:"grpc"`
 	GrpcProd string `json:"grpc_prod"`
-
 }
 
-type ScoringConditions struct {
-	ActiveProduct int32 `json:"activeProduct"`
-	RegistrationDate int32 `json:"registrationDate"`
-	Turnover float64 `json:"turnover"`
-	SalesLastMonth int32 `json:"salesLastMonth"`
+type PackageXS struct {
+	ActiveProductsAge int `json:"activeProductsAge"` // Товары активны и актуальны на сайте последние x дней
+}
+
+type PackageS struct {
+	ActiveProductsAge                   int     `json:"activeProductsAge"`                   // Товары активны и актуальны на сайте последние x дней
+	OrderCancellationBeforeConfirmation int     `json:"orderCancellationBeforeConfirmation"` // % отмен заказов до подтверждения наличия по вине продавца
+	OrderCancellationDuringDelivery     int     `json:"orderCancellationDuringDelivery"`     // % отмен заказов на этапе доставки по вине продавца
+	OrderConfirmationTimeViolation      int     `json:"orderConfirmationTimeViolation"`      // % заказов с нарушением временного регламента по подтверждению заказов
+	OrderAssemblyTimeViolation          int     `json:"orderAssemblyTimeViolation"`          // % заказов с нарушением временного регламента по сборке заказов
+	DeliveryTimeViolation               int     `json:"deliveryTimeViolation"`               // % нарушений сроков доставки (в случае доставки собственными силами)
+	SellerRating                        float64 `json:"sellerRating"`                        // Рейтинг продавца на маркетплейсе
+}
+
+type PackageM struct {
+	PackageS
+}
+
+type PackageL struct {
+	PackageS
+	Turnover          int  `json:"turnover"`          // Оборот продавца на маркетплейсе
+	IsCreditBuyButton bool `json:"isCreditBuyButton"` // Наличие кнопки "Купить в кредит"
+	IsQRCreditOffline bool `json:"isQRCreditOffline"` // Наличие QR-кода для оформления кредита оффлайн
+}
+
+type PackageXL struct {
+	PackageL
 }
 
 var Config *Configs
 
+// InitConfigFromJSONFile загружает конфигурацию из JSON файла
 func InitConfigFromJSONFile(jsonFilePath string) error {
 	var (
 		filePath string

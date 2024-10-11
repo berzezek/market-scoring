@@ -27,7 +27,7 @@ func MakeHTTPHandler(svc service.Service) http.Handler {
 }
 
 func decodeGetDataRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	sellerId := r.URL.Query().Get("sellerId")
+	sellerId := r.URL.Query().Get("bin")
 	return service.GetDataRequest{SellerID: sellerId}, nil
 }
 

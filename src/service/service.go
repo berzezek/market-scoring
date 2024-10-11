@@ -2,13 +2,13 @@ package service
 
 import (
 	"context"
-	"time"
+	"fmt"
+
+	"github.com/go-kit/kit/endpoint"
 
 	"market-scoring/src/config"
 	"market-scoring/src/proto"
 	"market-scoring/src/utils"
-
-	"github.com/go-kit/kit/endpoint"
 )
 
 // Service описывает интерфейс нашего сервиса
@@ -36,29 +36,38 @@ func (s *service) GetData(ctx context.Context, req GetDataRequest) (GetDataRespo
 		return GetDataResponse{}, err
 	}
 
-	// Преобразуем gRPC ответ в формат Go
-	registrationDate := grpcRes.RegistrationDate.AsTime()
+	// Логируем gRPC ответ
+	fmt.Printf("Received gRPC response: %+v\n", grpcRes)
 
-	// Обработка ответа с помощью ScoringService
-	scoringResult := ScoringService(grpcRes.ActiveProducts, registrationDate, grpcRes.Turnover, grpcRes.SalesLastMonth)
+	// Вызываем ScoringService для определения числового значения категории
+	packageLevel := ScoringService(grpcRes)
 
-	// Возвращаем результат как булево значение
+	// Возвращаем числовое значение категории в ответе
 	return GetDataResponse{
-		Message: scoringResult, // Результат скоринга в виде булевого значения
+		Message: packageLevel,
 	}, nil
 }
 
+// ScoringService анализирует ответ gRPC и возвращает числовое значение категории (от 0 до 5)
+func ScoringService(grpcRes *proto.DataResponse) int {
+	// Загружаем условия скоринга из конфигурации
+	conditions := config.Config.ScoringConditions
 
-// ScoringService выполняет анализ данных
-func ScoringService(activeProducts int32, registrationDate time.Time, turnover float64, salesLastMonth int32) bool {
-	scoringConditions := config.Config.ScoringConditions
-
-	isActiveProductValid := activeProducts >= scoringConditions.ActiveProduct
-	isRegistrationDateValid := utils.IsDateOlderThanMonths(registrationDate, 6)
-	isTurnoverValid := turnover >= scoringConditions.Turnover
-	isSalesLastMonthValid := salesLastMonth >= scoringConditions.SalesLastMonth
-
-	return isActiveProductValid && isRegistrationDateValid && isTurnoverValid && isSalesLastMonthValid
+	// Сравниваем gRPC ответ с условиями для каждого пакета
+	switch {
+	case utils.MatchesPackageXL(grpcRes, conditions.XL):
+		return 5 // XL
+	case utils.MatchesPackageL(grpcRes, conditions.L):
+		return 4 // L
+	case utils.MatchesPackageM(grpcRes, conditions.M):
+		return 3 // M
+	case utils.MatchesPackageS(grpcRes, conditions.S):
+		return 2 // S
+	case utils.MatchesPackageXS(grpcRes, conditions.XS):
+		return 1 // XS
+	default:
+		return 0 // Если ни один пакет не подошел
+	}
 }
 
 // GetDataRequest структура запроса
@@ -68,7 +77,7 @@ type GetDataRequest struct {
 
 // GetDataResponse структура ответа
 type GetDataResponse struct {
-	Message bool `json:"message"`
+	Message int `json:"message"`
 }
 
 // MakeGetDataEndpoint создает эндпоинт для метода GetData

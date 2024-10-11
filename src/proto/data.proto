@@ -4,8 +4,6 @@ package data;
 
 option go_package = "/src/proto";
 
-import "google/protobuf/timestamp.proto";
-
 service DataService {
     rpc ProcessData (DataRequest) returns (DataResponse);
 }
@@ -15,10 +13,14 @@ message DataRequest {
 }
 
 message DataResponse {
-    string message = 1;
-    bool success = 2;
-    int32 active_products = 3;
-    google.protobuf.Timestamp registration_date = 4;
-    double turnover = 5;
-    int32 sales_last_month = 6;
+    int32 activeProductsAge = 1;
+    int32 orderCancellationBeforeConfirmation = 2;
+    int32 orderCancellationDuringDelivery = 3;
+    int32 orderConfirmationTimeViolation = 4;
+    int32 orderAssemblyTimeViolation = 5;
+    int32 deliveryTimeViolation = 6;
+    double sellerRating = 7;
+    int32 turnover = 8;
+    bool isCreditBuyButton = 9;
+    bool isQRCreditOffline = 10;
 }
